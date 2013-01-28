@@ -55,13 +55,13 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <AdditionalIncludeDirectories>D:\workspace\SBLearning\Src\GLTools\include;D:\workspace\SBLearning\freeglut-2.8.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Src\GLTools\include;$(SolutionDir)freeglut-2.8.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
-      <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)freeglut-2.8.0\lib\x86\Debug</AdditionalLibraryDirectories>
       <AdditionalDependencies>gltools.lib;freeglut.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
