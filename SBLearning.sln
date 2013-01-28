@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gltools", "project\GLTools\gltools.vcxproj", "{7E98459A-64AE-4734-A537-4AB52ED637E1}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SphereWorld", "project\Chapter04\SphereWorld\SphereWorld.vcxproj", "{A922F87E-0CF8-4B40-9F85-48DDA123B49B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7E98459A-64AE-4734-A537-4AB52ED637E1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7E98459A-64AE-4734-A537-4AB52ED637E1}.Debug|Win32.Build.0 = Debug|Win32
+		{7E98459A-64AE-4734-A537-4AB52ED637E1}.Release|Win32.ActiveCfg = Release|Win32
+		{7E98459A-64AE-4734-A537-4AB52ED637E1}.Release|Win32.Build.0 = Release|Win32
+		{A922F87E-0CF8-4B40-9F85-48DDA123B49B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A922F87E-0CF8-4B40-9F85-48DDA123B49B}.Debug|Win32.Build.0 = Debug|Win32
+		{A922F87E-0CF8-4B40-9F85-48DDA123B49B}.Release|Win32.ActiveCfg = Release|Win32
+		{A922F87E-0CF8-4B40-9F85-48DDA123B49B}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
