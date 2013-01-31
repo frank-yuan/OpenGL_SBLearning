@@ -32,6 +32,7 @@ GLGeometryTransform	transformPipeline;		// Geometry Transform Pipeline
 
 GLTriangleBatch		torusBatch;
 GLBatch				floorBatch;
+GLTriangleBatch		sphereBatch;
 
         
 //////////////////////////////////////////////////////////////////
@@ -49,7 +50,7 @@ void SetupRC()
 	
 	// This makes a torus
 	gltMakeTorus(torusBatch, 0.4f, 0.15f, 30, 30);
-	
+	gltMakeSphere(sphereBatch, 0.05f, 26, 13);	
     	
 	floorBatch.Begin(GL_LINES, 324);
     for(GLfloat x = -20.0; x <= 20.0f; x+= 0.5) {
@@ -84,6 +85,7 @@ void RenderScene(void)
     // Color values
     static GLfloat vFloorColor[] = { 0.0f, 1.0f, 0.0f, 1.0f};
     static GLfloat vTorusColor[] = { 1.0f, 0.0f, 0.0f, 1.0f };
+    static GLfloat vSphereColor[] = { 0.0f, 0.0f, 1.0f, 1.0f };
 
     // Time Based animation
 	static CStopWatch	rotTimer;
@@ -96,19 +98,27 @@ void RenderScene(void)
     // Save the current modelview matrix (the identity matrix)
 	modelViewMatrix.PushMatrix();	
 		
-	// Draw the ground
-	shaderManager.UseStockShader(GLT_SHADER_FLAT,
-								 transformPipeline.GetModelViewProjectionMatrix(),
-								 vFloorColor);	
-	floorBatch.Draw();
+		// Draw the ground
+		shaderManager.UseStockShader(GLT_SHADER_FLAT,
+									 transformPipeline.GetModelViewProjectionMatrix(),
+									 vFloorColor);	
+		floorBatch.Draw();
 
-    // Draw the spinning Torus
-    modelViewMatrix.Translate(0.0f, 0.0f, -2.5f);
-    modelViewMatrix.Rotate(yRot, 0.0f, 1.0f, 0.0f);
-    shaderManager.UseStockShader(GLT_SHADER_FLAT, transformPipeline.GetModelViewProjectionMatrix(),
-                                vTorusColor);
-    torusBatch.Draw();
+    	// Draw the spinning Torus
+    	modelViewMatrix.Translate(0.0f, 0.0f, -2.5f);
+    	modelViewMatrix.Rotate(yRot, 0.0f, 1.0f, 0.0f);
+    	shaderManager.UseStockShader(GLT_SHADER_FLAT, transformPipeline.GetModelViewProjectionMatrix(),
+    	                            vTorusColor);
+    	torusBatch.Draw();
 
+		modelViewMatrix.PushMatrix();
+			modelViewMatrix.Translate(0.4f, 0, 0);
+    		modelViewMatrix.Rotate(yRot * 2, 0.0f, 1.0f, 0.0f);
+			modelViewMatrix.Translate(0.3f, 0, 0);
+    	shaderManager.UseStockShader(GLT_SHADER_FLAT, transformPipeline.GetModelViewProjectionMatrix(),
+    	                            vSphereColor);
+		sphereBatch.Draw();
+		modelViewMatrix.PopMatrix();
 	// Restore the previous modleview matrix (the idenity matrix)
 	modelViewMatrix.PopMatrix();
         
