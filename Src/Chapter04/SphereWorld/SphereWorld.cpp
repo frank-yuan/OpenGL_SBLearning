@@ -66,8 +66,8 @@ void SetupRC()
     floorBatch.End();    
 
 	//################ custom shader initialize #####################
-	lightShader = gltLoadShaderPairWithAttributes("shaders/ADGLight.vp", "shaders/ADGLight.fp", 1, 
-					GLT_ATTRIBUTE_VERTEX, "vVertex");//, GLT_ATTRIBUTE_NORMAL, "vNormal");
+	lightShader = gltLoadShaderPairWithAttributes("shaders/ADGLight.vp", "shaders/ADGLight.fp", 2, 
+					GLT_ATTRIBUTE_VERTEX, "vVertex", GLT_ATTRIBUTE_NORMAL, "vNormal");
 	glBindFragDataLocation(lightShader, 0, "fragColor");
 	//################################################################
 
