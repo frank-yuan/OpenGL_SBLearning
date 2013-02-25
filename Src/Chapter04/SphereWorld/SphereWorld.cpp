@@ -68,6 +68,7 @@ void SetupRC()
 	//################ custom shader initialize #####################
 	lightShader = gltLoadShaderPairWithAttributes("shaders/ADGLight.vp", "shaders/ADGLight.fp", 1, 
 					GLT_ATTRIBUTE_VERTEX, "vVertex");//, GLT_ATTRIBUTE_NORMAL, "vNormal");
+	glBindFragDataLocation(lightShader, 0, "fragColor");
 	//################################################################
 
     }
@@ -94,7 +95,9 @@ void RenderScene(void)
     // Color values
     static GLfloat vFloorColor[] = { 0.0f, 1.0f, 0.0f, 1.0f};
     static GLfloat vTorusColor[] = { 1.0f, 0.0f, 0.0f, 1.0f };
-    static GLfloat vSphereColor[] = { 0.0f, 0.0f, 1.0f, 1.0f };
+    static GLfloat vAmbientColor[] = { 0.0f, 0.0f, 0.0f, 1.0f };
+    static GLfloat vSphereColor[] = { 0.9f, 0.9f, 0.9f, 1.0f };
+    static GLfloat vLightPos[] = { 0.0f, 1.0f, 1.0f};
 
     // Time Based animation
 	static CStopWatch	rotTimer;
@@ -118,7 +121,7 @@ void RenderScene(void)
     	modelViewMatrix.Rotate(yRot, 0.0f, 1.0f, 0.0f);
     	shaderManager.UseStockShader(GLT_SHADER_FLAT, transformPipeline.GetModelViewProjectionMatrix(),
     	                            vTorusColor);
-    	torusBatch.Draw();
+    	//torusBatch.Draw();
 
 		//################ custom shader rendering #####################
 		if (lightShader)
@@ -126,15 +129,24 @@ void RenderScene(void)
 			modelViewMatrix.PushMatrix();
 			{
 				modelViewMatrix.Translate(0.4f, 0, 0);
-				modelViewMatrix.Rotate(yRot * 2, 0.0f, 1.0f, 0.0f);
+				modelViewMatrix.Rotate(yRot / 2, 0.0f, 1.0f, 0.0f);
 				modelViewMatrix.Translate(0.3f, 0, 0);
 				glUseProgram(lightShader);
 
-				GLint iColor, iMvpMatix;
-				iColor = glGetUniformLocation(lightShader, "vColor");
-				iMvpMatix = glGetUniformLocation(lightShader, "mvpMatrix");
-				glUniform4fv(iColor, 1, vSphereColor);
-				glUniformMatrix4fv(iMvpMatix, 1, false, transformPipeline.GetModelViewProjectionMatrix());
+				GLint iDiffuseColor, iAmbientColor, iMvpMatrix, iMvMatrix, iNormalMatrix, iLightPos;
+				iDiffuseColor = glGetUniformLocation(lightShader, "vDiffuseColor");
+				iAmbientColor = glGetUniformLocation(lightShader, "vAmbientColor");
+				iMvpMatrix = glGetUniformLocation(lightShader, "mvpMatrix");
+				iMvMatrix = glGetUniformLocation(lightShader, "mvMatrix");
+				iNormalMatrix = glGetUniformLocation(lightShader, "normalMatrix");
+				iLightPos = glGetUniformLocation(lightShader, "vLightPos");
+
+				glUniform3fv(iLightPos, 1, vLightPos);
+				glUniform4fv(iDiffuseColor, 1, vSphereColor);
+				glUniform4fv(iAmbientColor, 1, vAmbientColor);
+				glUniformMatrix4fv(iMvpMatrix, 1, false, transformPipeline.GetModelViewProjectionMatrix());
+				glUniformMatrix4fv(iMvMatrix, 1, false, transformPipeline.GetModelViewMatrix());
+				glUniformMatrix4fv(iNormalMatrix, 1, false, transformPipeline.GetNormalMatrix());
 				sphereBatch.Draw();
 			}
 			modelViewMatrix.PopMatrix();

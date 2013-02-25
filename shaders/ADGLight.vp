@@ -1,9 +1,22 @@
-attribute vec4 vVertex;
-//attribute vec4 vNormal;
+#version 330
+
+in vec4 vVertex;
+in vec4 vNormal;
+uniform	  vec3 vLightPos; 
 uniform	  mat4 mvpMatrix;
-//uniform	  mat4 mvMatrix;
-//uniform   vec4 diffuseColor;
+uniform	  mat4 mvMatrix;
+uniform	  mat4 normalMatrix;
+uniform   vec4 vDiffuseColor;
+uniform   vec4 vAmbientColor;
+out		  vec4 vOutColor;
 void main(void){
+	vec4 posInEyeSpace = mvMatrix * vVertex;
+	vec3 pos = posInEyeSpace.xyz / posInEyeSpace.w;
+	vec3 dir = normalize(vLightPos - pos);
+	vec4 nor = normalMatrix * vNormal;
+	vOutColor = vAmbientColor;
+	float intens = max(0.0, dot(dir, nor.xyz));
+	vOutColor.rgb += vDiffuseColor.rgb * intens;
 	gl_Position = mvpMatrix * vVertex;
 }
 
