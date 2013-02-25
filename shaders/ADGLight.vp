@@ -1,0 +1,9 @@
+attribute vec4 vVertex;
+//attribute vec4 vNormal;
+uniform	  mat4 mvpMatrix;
+//uniform	  mat4 mvMatrix;
+//uniform   vec4 diffuseColor;
+void main(void){
+	gl_Position = mvpMatrix * vVertex;
+}
+

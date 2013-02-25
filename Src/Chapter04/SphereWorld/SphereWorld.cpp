@@ -34,7 +34,10 @@ GLTriangleBatch		torusBatch;
 GLBatch				floorBatch;
 GLTriangleBatch		sphereBatch;
 
-        
+//################ custom shader defnination #####################
+GLuint				lightShader;
+//################################################################
+
 //////////////////////////////////////////////////////////////////
 // This function does any needed initialization on the rendering
 // context. 
@@ -50,7 +53,7 @@ void SetupRC()
 	
 	// This makes a torus
 	gltMakeTorus(torusBatch, 0.4f, 0.15f, 30, 30);
-	gltMakeSphere(sphereBatch, 0.05f, 26, 13);	
+	gltMakeSphere(sphereBatch, 0.15f, 26, 13);	
     	
 	floorBatch.Begin(GL_LINES, 324);
     for(GLfloat x = -20.0; x <= 20.0f; x+= 0.5) {
@@ -61,6 +64,12 @@ void SetupRC()
         floorBatch.Vertex3f(-20.0f, -0.55f, x);
         }
     floorBatch.End();    
+
+	//################ custom shader initialize #####################
+	lightShader = gltLoadShaderPairWithAttributes("shaders/ADGLight.vp", "shaders/ADGLight.fp", 1, 
+					GLT_ATTRIBUTE_VERTEX, "vVertex");//, GLT_ATTRIBUTE_NORMAL, "vNormal");
+	//################################################################
+
     }
 
 
@@ -111,14 +120,26 @@ void RenderScene(void)
     	                            vTorusColor);
     	torusBatch.Draw();
 
-		modelViewMatrix.PushMatrix();
-			modelViewMatrix.Translate(0.4f, 0, 0);
-    		modelViewMatrix.Rotate(yRot * 2, 0.0f, 1.0f, 0.0f);
-			modelViewMatrix.Translate(0.3f, 0, 0);
-    	shaderManager.UseStockShader(GLT_SHADER_FLAT, transformPipeline.GetModelViewProjectionMatrix(),
-    	                            vSphereColor);
-		sphereBatch.Draw();
-		modelViewMatrix.PopMatrix();
+		//################ custom shader rendering #####################
+		if (lightShader)
+		{
+			modelViewMatrix.PushMatrix();
+			{
+				modelViewMatrix.Translate(0.4f, 0, 0);
+				modelViewMatrix.Rotate(yRot * 2, 0.0f, 1.0f, 0.0f);
+				modelViewMatrix.Translate(0.3f, 0, 0);
+				glUseProgram(lightShader);
+
+				GLint iColor, iMvpMatix;
+				iColor = glGetUniformLocation(lightShader, "vColor");
+				iMvpMatix = glGetUniformLocation(lightShader, "mvpMatrix");
+				glUniform4fv(iColor, 1, vSphereColor);
+				glUniformMatrix4fv(iMvpMatix, 1, false, transformPipeline.GetModelViewProjectionMatrix());
+				sphereBatch.Draw();
+			}
+			modelViewMatrix.PopMatrix();
+		}
+		//################################################################
 	// Restore the previous modleview matrix (the idenity matrix)
 	modelViewMatrix.PopMatrix();
         
