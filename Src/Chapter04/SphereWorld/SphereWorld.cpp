@@ -128,9 +128,9 @@ void RenderScene(void)
 		{
 			modelViewMatrix.PushMatrix();
 			{
-				modelViewMatrix.Translate(0.4f, 0, 0);
-				modelViewMatrix.Rotate(yRot / 2, 0.0f, 1.0f, 0.0f);
-				modelViewMatrix.Translate(0.3f, 0, 0);
+				//modelViewMatrix.Translate(0.4f, 0, 0);
+				//modelViewMatrix.Rotate(yRot / 2, 0.0f, 1.0f, 0.0f);
+				//modelViewMatrix.Translate(0.3f, 0, 0);
 				glUseProgram(lightShader);
 
 				GLint iDiffuseColor, iAmbientColor, iMvpMatrix, iMvMatrix, iNormalMatrix, iLightPos;
@@ -146,7 +146,7 @@ void RenderScene(void)
 				glUniform4fv(iAmbientColor, 1, vAmbientColor);
 				glUniformMatrix4fv(iMvpMatrix, 1, false, transformPipeline.GetModelViewProjectionMatrix());
 				glUniformMatrix4fv(iMvMatrix, 1, false, transformPipeline.GetModelViewMatrix());
-				glUniformMatrix4fv(iNormalMatrix, 1, false, transformPipeline.GetNormalMatrix());
+				glUniformMatrix3fv(iNormalMatrix, 1, false, transformPipeline.GetNormalMatrix());
 				sphereBatch.Draw();
 			}
 			modelViewMatrix.PopMatrix();
