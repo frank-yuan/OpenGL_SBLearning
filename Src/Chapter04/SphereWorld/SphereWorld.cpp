@@ -73,7 +73,6 @@ void SetupRC()
 
     }
 
-
 ///////////////////////////////////////////////////
 // Screen changes size or is initialized
 void ChangeSize(int nWidth, int nHeight)
@@ -97,7 +96,7 @@ void RenderScene(void)
     static GLfloat vTorusColor[] = { 1.0f, 0.0f, 0.0f, 1.0f };
     static GLfloat vAmbientColor[] = { 0.0f, 0.0f, 0.0f, 1.0f };
     static GLfloat vSphereColor[] = { 0.9f, 0.9f, 0.9f, 1.0f };
-    static GLfloat vLightPos[] = { 0.0f, 1.0f, 1.0f};
+    static GLfloat vLightPos[] = { 1.0f, 1.0f, -2.0f};
 
     // Time Based animation
 	static CStopWatch	rotTimer;
@@ -109,7 +108,13 @@ void RenderScene(void)
     
     // Save the current modelview matrix (the identity matrix)
 	modelViewMatrix.PushMatrix();	
-		
+	GLFrame				cameraFrame;
+	cameraFrame.MoveForward(2.5f);
+	//cameraFrame.RotateLocalY(yRot / 30.0f);
+	cameraFrame.MoveForward(-3.0f);
+	M3DMatrix44f cameraMatrix;
+	cameraFrame.GetCameraMatrix(cameraMatrix);
+	modelViewMatrix.LoadMatrix(cameraMatrix);
 		// Draw the ground
 		shaderManager.UseStockShader(GLT_SHADER_FLAT,
 									 transformPipeline.GetModelViewProjectionMatrix(),
@@ -121,7 +126,7 @@ void RenderScene(void)
     	modelViewMatrix.Rotate(yRot, 0.0f, 1.0f, 0.0f);
     	shaderManager.UseStockShader(GLT_SHADER_FLAT, transformPipeline.GetModelViewProjectionMatrix(),
     	                            vTorusColor);
-    	//torusBatch.Draw();
+    	torusBatch.Draw();
 
 		//################ custom shader rendering #####################
 		if (lightShader)
