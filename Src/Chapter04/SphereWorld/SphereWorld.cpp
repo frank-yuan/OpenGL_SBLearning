@@ -53,7 +53,7 @@ void SetupRC()
 	
 	// This makes a torus
 	gltMakeTorus(torusBatch, 0.4f, 0.15f, 30, 30);
-	gltMakeSphere(sphereBatch, 0.15f, 26, 13);	
+	gltMakeSphere(sphereBatch, 0.65f, 26, 13);	
     	
 	floorBatch.Begin(GL_LINES, 324);
     for(GLfloat x = -20.0; x <= 20.0f; x+= 0.5) {
@@ -124,9 +124,9 @@ void RenderScene(void)
     	// Draw the spinning Torus
     	modelViewMatrix.Translate(0.0f, 0.0f, -2.5f);
     	modelViewMatrix.Rotate(yRot, 0.0f, 1.0f, 0.0f);
-    	shaderManager.UseStockShader(GLT_SHADER_FLAT, transformPipeline.GetModelViewProjectionMatrix(),
-    	                            vTorusColor);
-    	torusBatch.Draw();
+    	//shaderManager.UseStockShader(GLT_SHADER_FLAT, transformPipeline.GetModelViewProjectionMatrix(),
+    	//                            vTorusColor);
+    	//torusBatch.Draw();
 
 		//################ custom shader rendering #####################
 		if (lightShader)
