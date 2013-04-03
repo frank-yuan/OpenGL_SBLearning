@@ -94,8 +94,9 @@ void RenderScene(void)
     // Color values
     static GLfloat vFloorColor[] = { 0.0f, 1.0f, 0.0f, 1.0f};
     static GLfloat vTorusColor[] = { 1.0f, 0.0f, 0.0f, 1.0f };
-    static GLfloat vAmbientColor[] = { 0.0f, 0.0f, 0.0f, 1.0f };
-    static GLfloat vSphereColor[] = { 0.9f, 0.9f, 0.9f, 1.0f };
+    static GLfloat vAmbientColor[] = { 0.0f, 0.0f, 0.3f, 1.0f };
+    static GLfloat vSpecularColor[] = { 0.8f, 0.8f, 0.8f, 1.0f };
+    static GLfloat vSphereColor[] = { 0.5f, 0.5f, 0.5f, 1.0f };
     static GLfloat vLightPos[] = { 1.0f, 1.0f, -2.0f};
 
     // Time Based animation
@@ -138,20 +139,24 @@ void RenderScene(void)
 				//modelViewMatrix.Translate(0.3f, 0, 0);
 				glUseProgram(lightShader);
 
-				GLint iDiffuseColor, iAmbientColor, iMvpMatrix, iMvMatrix, iNormalMatrix, iLightPos;
+				GLint iDiffuseColor, iAmbientColor, iMvpMatrix, iMvMatrix, iNormalMatrix, iLightPos, iSpecularColor, iShiness;
 				iDiffuseColor = glGetUniformLocation(lightShader, "vDiffuseColor");
 				iAmbientColor = glGetUniformLocation(lightShader, "vAmbientColor");
 				iMvpMatrix = glGetUniformLocation(lightShader, "mvpMatrix");
 				iMvMatrix = glGetUniformLocation(lightShader, "mvMatrix");
 				iNormalMatrix = glGetUniformLocation(lightShader, "normalMatrix");
 				iLightPos = glGetUniformLocation(lightShader, "vLightPos");
+				iSpecularColor = glGetUniformLocation(lightShader, "vSpecularColor");
+				iShiness = glGetUniformLocation(lightShader, "fShiness");
 
 				glUniform3fv(iLightPos, 1, vLightPos);
 				glUniform4fv(iDiffuseColor, 1, vSphereColor);
 				glUniform4fv(iAmbientColor, 1, vAmbientColor);
+				glUniform4fv(iSpecularColor, 1, vSpecularColor);
 				glUniformMatrix4fv(iMvpMatrix, 1, false, transformPipeline.GetModelViewProjectionMatrix());
 				glUniformMatrix4fv(iMvMatrix, 1, false, transformPipeline.GetModelViewMatrix());
 				glUniformMatrix3fv(iNormalMatrix, 1, false, transformPipeline.GetNormalMatrix());
+				glUniform1f(iShiness, 8.0f);
 				sphereBatch.Draw();
 			}
 			modelViewMatrix.PopMatrix();
