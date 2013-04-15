@@ -34,6 +34,8 @@ GLTriangleBatch		torusBatch;
 GLBatch				floorBatch;
 GLTriangleBatch		sphereBatch;
 
+GLFrame				cameraFrame;
+
 //################ custom shader defnination #####################
 GLuint				lightShader;
 //################################################################
@@ -109,10 +111,9 @@ void RenderScene(void)
     
     // Save the current modelview matrix (the identity matrix)
 	modelViewMatrix.PushMatrix();	
-	GLFrame				cameraFrame;
-	cameraFrame.MoveForward(2.5f);
+
 	//cameraFrame.RotateLocalY(yRot / 30.0f);
-	cameraFrame.MoveForward(-3.0f);
+	//cameraFrame.MoveForward(-3.0f);
 	M3DMatrix44f cameraMatrix;
 	cameraFrame.GetCameraMatrix(cameraMatrix);
 	modelViewMatrix.LoadMatrix(cameraMatrix);
@@ -173,6 +174,37 @@ void RenderScene(void)
     }
 
 
+void SpecialKeys(int key, int x, int y)
+    {
+	GLfloat stepSize = 0.025f;
+
+
+	if(key == GLUT_KEY_UP)
+		cameraFrame.MoveForward(stepSize);
+
+	if(key == GLUT_KEY_DOWN)
+		cameraFrame.MoveForward(-stepSize);
+	
+	if(key == GLUT_KEY_LEFT)
+		cameraFrame.RotateLocalY(stepSize);
+
+	if(key == GLUT_KEY_RIGHT)
+		cameraFrame.RotateLocalY(-stepSize);
+//  //this is not Pitch
+//	if (key == GLUT_KEY_PAGE_UP)
+//		cameraFrame.RotateLocalX(stepSize);
+//
+//	if (key == GLUT_KEY_PAGE_DOWN)
+//		cameraFrame.RotateLocalX(-stepSize);
+
+	if (key == GLUT_KEY_HOME)
+		cameraFrame.MoveUp(stepSize);
+
+	if (key == GLUT_KEY_END)
+		cameraFrame.MoveUp(-stepSize);
+
+	}
+
 int main(int argc, char* argv[])
     {
 	gltSetWorkingDirectory(argv[0]);
@@ -185,6 +217,7 @@ int main(int argc, char* argv[])
  
     glutReshapeFunc(ChangeSize);
     glutDisplayFunc(RenderScene);
+    glutSpecialFunc(SpecialKeys);
     
     GLenum err = glewInit();
     if (GLEW_OK != err) {
