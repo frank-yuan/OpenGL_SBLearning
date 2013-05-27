@@ -24,6 +24,7 @@
 
 
 
+
 GLShaderManager		shaderManager;			// Shader Manager
 GLMatrixStack		modelViewMatrix;		// Modelview Matrix
 GLMatrixStack		projectionMatrix;		// Projection Matrix
@@ -207,6 +208,7 @@ void SpecialKeys(int key, int x, int y)
 
 int main(int argc, char* argv[])
     {
+
 	gltSetWorkingDirectory(argv[0]);
 		
     glutInit(&argc, argv);
