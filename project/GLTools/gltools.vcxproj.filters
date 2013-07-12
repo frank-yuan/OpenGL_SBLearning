@@ -88,5 +88,11 @@
     <None Include="..\..\shaders\ADGLight.vp">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="..\..\shaders\PointLight.fp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\shaders\PointLight.vp">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

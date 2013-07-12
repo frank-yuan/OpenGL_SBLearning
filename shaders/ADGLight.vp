@@ -2,7 +2,7 @@
 
 attribute vec4 vVertex;
 attribute vec3 vNormal;
-uniform	  vec3 vLightPos; 
+uniform	  vec4 vLightPos; 
 uniform	  mat4 mvpMatrix;
 uniform	  mat4 mvMatrix;
 uniform	  mat3 normalMatrix;
@@ -12,25 +12,31 @@ uniform   vec4 vSpecularColor;
 uniform	  float fShiness;
 varying		  vec4 vOutColor;
 void main(void){
+	mat3 normalMatrix1;
+	normalMatrix1[0] = normalize(mvMatrix[0].xyz);
+	normalMatrix1[1] = normalize(mvMatrix[1].xyz);
+	normalMatrix1[2] = normalize(mvMatrix[2].xyz);
+	vec3 nor = normalize(normalMatrix1 * vNormal);
+
+
 	vec4 posInEyeSpace = mvMatrix * vVertex;
 	vec3 pos = posInEyeSpace.xyz / posInEyeSpace.w;
 	//vec3 dir = normalize(vLightPos - vVertex.xyz);
 	//dir = normalMatrix * dir;
-	vec3 dir = normalize(vLightPos - pos);
-	vec3 nor = normalMatrix * vNormal;
+	vec3 dir = normalize(vLightPos.xyz - pos);
 
 	// ambient light
-	vOutColor = vAmbientColor;
+	//vOutColor = vAmbientColor;
 
 	// diffuse light
 	float intens = max(0.0, dot(nor, dir));
-	vOutColor.rgb += vDiffuseColor.rgb * intens;
-
-	// specular light
-	vec3 reflectDir = reflect(-dir, nor);
-	float shineIntens = max(0.0, dot(reflectDir, nor));
-	float shine = pow(shineIntens, fShiness);
-	vOutColor.rgb += vSpecularColor.rgb * shine;
+	vOutColor.rgb = vDiffuseColor.rgb * intens;
+//
+//	// specular light
+//	vec3 reflectDir = reflect(-dir, nor);
+//	float shineIntens = max(0.0, dot(reflectDir, nor));
+//	float shine = pow(shineIntens, fShiness);
+//	vOutColor.rgb += vSpecularColor.rgb * shine;
 	gl_Position = mvpMatrix * vVertex;
 }
 

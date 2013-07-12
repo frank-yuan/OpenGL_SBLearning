@@ -71,8 +71,6 @@ void SetupRC()
 	//################ custom shader initialize #####################
 	lightShader = gltLoadShaderPairWithAttributes("shaders/ADGLight.vp", "shaders/ADGLight.fp", 2, 
 					GLT_ATTRIBUTE_VERTEX, "vVertex", GLT_ATTRIBUTE_NORMAL, "vNormal");
-    if (lightShader)
-        glBindFragDataLocation(lightShader, 0, "fragColor");
 	//################################################################
 
     }
@@ -101,7 +99,7 @@ void RenderScene(void)
     static GLfloat vAmbientColor[] = { 0.0f, 0.0f, 0.3f, 1.0f };
     static GLfloat vSpecularColor[] = { 0.8f, 0.8f, 0.8f, 1.0f };
     static GLfloat vSphereColor[] = { 0.5f, 0.5f, 0.5f, 1.0f };
-    static GLfloat vLightPos[] = { 0.0f, 2.0f, 2.0f};
+    static GLfloat vLightPos[] = { .0f, 100.0f, 100.0f, 1.0f};
 
     // Time Based animation
 	static CStopWatch	rotTimer;
@@ -151,8 +149,9 @@ void RenderScene(void)
 				iLightPos = glGetUniformLocation(lightShader, "vLightPos");
 				iSpecularColor = glGetUniformLocation(lightShader, "vSpecularColor");
 				iShiness = glGetUniformLocation(lightShader, "fShiness");
-
-				glUniform3fv(iLightPos, 1, vLightPos);
+				M3DVector4f lightPos;
+				m3dTransformVector4(lightPos, vLightPos, cameraMatrix);
+				glUniform3fv(iLightPos, 1, lightPos);
 				glUniform4fv(iDiffuseColor, 1, vSphereColor);
 				glUniform4fv(iAmbientColor, 1, vAmbientColor);
 				glUniform4fv(iSpecularColor, 1, vSpecularColor);
@@ -160,6 +159,19 @@ void RenderScene(void)
 				glUniformMatrix4fv(iMvMatrix, 1, false, transformPipeline.GetModelViewMatrix());
 				glUniformMatrix3fv(iNormalMatrix, 1, false, transformPipeline.GetNormalMatrix());
 				glUniform1f(iShiness, 8.0f);
+				sphereBatch.Draw();
+			}
+			modelViewMatrix.PopMatrix();
+		}
+		else
+		{
+			modelViewMatrix.PushMatrix();
+			{
+				M3DVector4f lightPos;
+				m3dTransformVector4(lightPos, vLightPos, cameraMatrix);
+
+				shaderManager.UseStockShader(GLT_SHADER_POINT_LIGHT_DIFF, transformPipeline.GetModelViewMatrix(), 
+					transformPipeline.GetProjectionMatrix(), lightPos, vFloorColor);
 				sphereBatch.Draw();
 			}
 			modelViewMatrix.PopMatrix();
@@ -197,10 +209,10 @@ void SpecialKeys(int key, int x, int y)
 
 
 	if(key == GLUT_KEY_UP)
-		cameraFrame.RotateLocalX(gStepSize);
+		cameraFrame.RotateLocalX(-gStepSize);
 
 	if(key == GLUT_KEY_DOWN)
-		cameraFrame.RotateLocalX(-gStepSize);
+		cameraFrame.RotateLocalX(gStepSize);
 
 	if(key == GLUT_KEY_LEFT)
 		cameraFrame.RotateLocalY(gStepSize);

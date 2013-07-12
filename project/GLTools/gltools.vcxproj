@@ -106,6 +106,8 @@
   <ItemGroup>
     <None Include="..\..\shaders\ADGLight.fp" />
     <None Include="..\..\shaders\ADGLight.vp" />
+    <None Include="..\..\shaders\PointLight.fp" />
+    <None Include="..\..\shaders\PointLight.vp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
