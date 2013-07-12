@@ -1,0 +1,144 @@
+// !$*UTF8*$!
+{
+	256AC3F00F4B6AF500CF3369 /* SphereWorld_Prefix.pch */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {835, 799}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 153}";
+		};
+	};
+	29B97313FDCFA39411CA2CEA /* Project object */ = {
+		activeBuildConfigurationName = Release;
+		activeExecutable = 39CD3167112B86C900A7A195 /* SphereWorld */;
+		activeTarget = 8D1107260486CEB800E47090 /* SphereWorld */;
+		addToTargets = (
+			8D1107260486CEB800E47090 /* SphereWorld */,
+		);
+		codeSenseManager = 39CD3174112B86D300A7A195 /* Code sense */;
+		executables = (
+			39CD3167112B86C900A7A195 /* SphereWorld */,
+		);
+		perUserDictionary = {
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					657,
+					20,
+					48,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 288551105;
+			PBXWorkspaceStateSaveDate = 288551105;
+		};
+		perUserProjectItems = {
+			3903AD391132DC110009B30D /* PBXTextBookmark */ = 3903AD391132DC110009B30D /* PBXTextBookmark */;
+			3903ADCB1132F0C80009B30D /* PBXTextBookmark */ = 3903ADCB1132F0C80009B30D /* PBXTextBookmark */;
+			39CD31F0112C528900A7A195 /* PBXTextBookmark */ = 39CD31F0112C528900A7A195 /* PBXTextBookmark */;
+		};
+		sourceControlManager = 39CD3173112B86D300A7A195 /* Source Control */;
+		userBuildSettings = {
+		};
+	};
+	3903AD391132DC110009B30D /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 39CD3176112B86EE00A7A195 /* SphereWorld.cpp */;
+		name = "SphereWorld.cpp: 35";
+		rLen = 0;
+		rLoc = 803;
+		rType = 0;
+		vrLen = 1589;
+		vrLoc = 0;
+	};
+	3903ADCB1132F0C80009B30D /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 39CD3176112B86EE00A7A195 /* SphereWorld.cpp */;
+		name = "SphereWorld.cpp: 24";
+		rLen = 0;
+		rLoc = 462;
+		rType = 0;
+		vrLen = 1566;
+		vrLoc = 0;
+	};
+	39CD3167112B86C900A7A195 /* SphereWorld */ = {
+		isa = PBXExecutable;
+		activeArgIndices = (
+		);
+		argumentStrings = (
+		);
+		autoAttachOnCrash = 1;
+		breakpointsEnabled = 0;
+		configStateDict = {
+		};
+		customDataFormattersEnabled = 1;
+		dataTipCustomDataFormattersEnabled = 1;
+		dataTipShowTypeColumn = 1;
+		dataTipSortType = 0;
+		debuggerPlugin = GDBDebugging;
+		disassemblyDisplayState = 0;
+		dylibVariantSuffix = "";
+		enableDebugStr = 1;
+		environmentEntries = (
+		);
+		executableSystemSymbolLevel = 0;
+		executableUserSymbolLevel = 0;
+		libgmallocEnabled = 0;
+		name = SphereWorld;
+		savedGlobals = {
+		};
+		showTypeColumn = 0;
+		sourceDirectories = (
+		);
+	};
+	39CD3173112B86D300A7A195 /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+			repositoryNamesForRoots = {
+				"" = "";
+			};
+		};
+	};
+	39CD3174112B86D300A7A195 /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+	39CD3176112B86EE00A7A195 /* SphereWorld.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {835, 1989}}";
+			sepNavSelRange = "{462, 0}";
+			sepNavVisRange = "{0, 1566}";
+			sepNavWindowFrame = "{{75, 124}, {1690, 1049}}";
+		};
+	};
+	39CD31F0112C528900A7A195 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 256AC3F00F4B6AF500CF3369 /* SphereWorld_Prefix.pch */;
+		name = "SphereWorld_Prefix.pch: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 153;
+		vrLoc = 0;
+	};
+	8D1107260486CEB800E47090 /* SphereWorld */ = {
+		activeExec = 0;
+		executables = (
+			39CD3167112B86C900A7A195 /* SphereWorld */,
+		);
+	};
+}
