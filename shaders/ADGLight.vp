@@ -1,7 +1,7 @@
-#version 330
+#version 120
 
-in vec4 vVertex;
-in vec3 vNormal;
+attribute vec4 vVertex;
+attribute vec3 vNormal;
 uniform	  vec3 vLightPos; 
 uniform	  mat4 mvpMatrix;
 uniform	  mat4 mvMatrix;
@@ -10,11 +10,17 @@ uniform   vec4 vDiffuseColor;
 uniform   vec4 vAmbientColor;
 uniform   vec4 vSpecularColor;
 uniform	  float fShiness;
-out		  vec4 vOutColor;
+varying		  vec4 vOutColor;
 void main(void){
 	vec4 posInEyeSpace = mvMatrix * vVertex;
 	vec3 pos = posInEyeSpace.xyz / posInEyeSpace.w;
-	vec3 dir = normalize(vLightPos - pos);
+	//vec3 dir = normalize(vLightPos - vVertex.xyz);
+	//dir = normalMatrix * dir;
+	vec4 lightPos;
+	lightPos.xyz = vLightPos;
+	lightPos.w = 1;
+	lightPos = lightPos;
+	vec3 dir = normalize(lightPos.xyz - pos);
 	vec3 nor = normalMatrix * vNormal;
 
 	// ambient light
