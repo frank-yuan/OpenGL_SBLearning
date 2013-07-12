@@ -71,7 +71,8 @@ void SetupRC()
 	//################ custom shader initialize #####################
 	lightShader = gltLoadShaderPairWithAttributes("shaders/ADGLight.vp", "shaders/ADGLight.fp", 2, 
 					GLT_ATTRIBUTE_VERTEX, "vVertex", GLT_ATTRIBUTE_NORMAL, "vNormal");
-	glBindFragDataLocation(lightShader, 0, "fragColor");
+    if (lightShader)
+        glBindFragDataLocation(lightShader, 0, "fragColor");
 	//################################################################
 
     }
@@ -109,7 +110,7 @@ void RenderScene(void)
 	// Clear the color and depth buffers
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
-    vLightPos = modelViewMatrix
+    //vLightPos = modelViewMatrix
     // Save the current modelview matrix (the identity matrix)
 	modelViewMatrix.PushMatrix();	
 
