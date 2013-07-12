@@ -71,8 +71,8 @@ void SetupRC()
 	//################ custom shader initialize #####################
 	lightShader = gltLoadShaderPairWithAttributes("shaders/ADGLight.vp", "shaders/ADGLight.fp", 2, 
 					GLT_ATTRIBUTE_VERTEX, "vVertex", GLT_ATTRIBUTE_NORMAL, "vNormal");
-    if (lightShader)
-        glBindFragDataLocation(lightShader, 0, "fragColor");
+    //if (lightShader)
+    //    glBindFragDataLocation(lightShader, 0, "fragColor");
 	//################################################################
 
     }
