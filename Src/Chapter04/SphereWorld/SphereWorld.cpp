@@ -151,7 +151,7 @@ void RenderScene(void)
 				iShiness = glGetUniformLocation(lightShader, "fShiness");
 				M3DVector4f lightPos;
 				m3dTransformVector4(lightPos, vLightPos, cameraMatrix);
-				glUniform3fv(iLightPos, 1, lightPos);
+				glUniform4fv(iLightPos, 1, lightPos);
 				glUniform4fv(iDiffuseColor, 1, vSphereColor);
 				glUniform4fv(iAmbientColor, 1, vAmbientColor);
 				glUniform4fv(iSpecularColor, 1, vSpecularColor);

@@ -31,12 +31,12 @@ void main(void){
 	// diffuse light
 	float intens = max(0.0, dot(nor, dir));
 	vOutColor.rgb = vDiffuseColor.rgb * intens;
-//
-//	// specular light
-//	vec3 reflectDir = reflect(-dir, nor);
-//	float shineIntens = max(0.0, dot(reflectDir, nor));
-//	float shine = pow(shineIntens, fShiness);
-//	vOutColor.rgb += vSpecularColor.rgb * shine;
+
+	// specular light
+	vec3 reflectDir = reflect(-dir, nor);
+	float shineIntens = max(0.0, dot(reflectDir, nor));
+	float shine = pow(shineIntens, fShiness);
+	vOutColor.rgb += vSpecularColor.rgb * shine;
 	gl_Position = mvpMatrix * vVertex;
 }
 
