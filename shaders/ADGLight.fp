@@ -4,4 +4,4 @@ varying		vec4 vOutColor;
 void main(void) 
 { 
 	gl_FragColor = vOutColor; 
-};
+}

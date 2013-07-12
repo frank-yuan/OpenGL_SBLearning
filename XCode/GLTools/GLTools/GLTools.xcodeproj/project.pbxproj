@@ -154,8 +154,10 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				GLTOOLS_INCLUDE = ../../../Src/GLTools/include;
 				INSTALL_PATH = /usr/local/lib;
 				PRODUCT_NAME = GLTools;
+				SDKROOT = macosx10.7;
 			};
 			name = Debug;
 		};
@@ -165,8 +167,10 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_MODEL_TUNING = G5;
+				GLTOOLS_INCLUDE = ../../../Src/GLTools/include;
 				INSTALL_PATH = /usr/local/lib;
 				PRODUCT_NAME = GLTools;
+				SDKROOT = macosx10.7;
 			};
 			name = Release;
 		};
@@ -181,7 +185,7 @@
 				HEADER_SEARCH_PATHS = "$(GLTOOLS_INCLUDE)";
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
-				SDKROOT = macosx10.6;
+				SDKROOT = macosx10.7;
 			};
 			name = Debug;
 		};
@@ -194,7 +198,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "$(GLTOOLS_INCLUDE)";
 				PREBINDING = NO;
-				SDKROOT = macosx10.6;
+				SDKROOT = macosx10.7;
 			};
 			name = Release;
 		};
