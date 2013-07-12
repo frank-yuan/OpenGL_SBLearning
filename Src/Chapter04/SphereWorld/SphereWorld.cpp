@@ -100,7 +100,7 @@ void RenderScene(void)
     static GLfloat vAmbientColor[] = { 0.0f, 0.0f, 0.3f, 1.0f };
     static GLfloat vSpecularColor[] = { 0.8f, 0.8f, 0.8f, 1.0f };
     static GLfloat vSphereColor[] = { 0.5f, 0.5f, 0.5f, 1.0f };
-    static GLfloat vLightPos[] = { 1.0f, 1.0f, -2.0f};
+    static GLfloat vLightPos[] = { 0.0f, 2.0f, 2.0f};
 
     // Time Based animation
 	static CStopWatch	rotTimer;
@@ -109,7 +109,7 @@ void RenderScene(void)
 	// Clear the color and depth buffers
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
-    
+    vLightPos = modelViewMatrix
     // Save the current modelview matrix (the identity matrix)
 	modelViewMatrix.PushMatrix();	
 
@@ -175,36 +175,52 @@ void RenderScene(void)
     }
 
 
+GLfloat gStepSize = 0.05f;
+void KeyboardHandler(unsigned char key, int x, int y)
+{
+	printf("input key %c, %d, (%d, %d)\n", key, key, x, y);
+	if (key == 'w')
+		cameraFrame.MoveForward(gStepSize);
+
+	if(key == 's')
+		cameraFrame.MoveForward(-gStepSize);
+
+	if (key == 'a')
+		cameraFrame.MoveRight(gStepSize);
+	if(key == 'd')
+		cameraFrame.MoveRight(-gStepSize);
+
+}
 void SpecialKeys(int key, int x, int y)
-    {
-	GLfloat stepSize = 0.025f;
+{
 
 
 	if(key == GLUT_KEY_UP)
-		cameraFrame.MoveForward(stepSize);
+		cameraFrame.RotateLocalX(gStepSize);
 
 	if(key == GLUT_KEY_DOWN)
-		cameraFrame.MoveForward(-stepSize);
-	
+		cameraFrame.RotateLocalX(-gStepSize);
+
 	if(key == GLUT_KEY_LEFT)
-		cameraFrame.RotateLocalY(stepSize);
+		cameraFrame.RotateLocalY(gStepSize);
 
 	if(key == GLUT_KEY_RIGHT)
-		cameraFrame.RotateLocalY(-stepSize);
-//  //this is not Pitch
-//	if (key == GLUT_KEY_PAGE_UP)
-//		cameraFrame.RotateLocalX(stepSize);
-//
-//	if (key == GLUT_KEY_PAGE_DOWN)
-//		cameraFrame.RotateLocalX(-stepSize);
+		cameraFrame.RotateLocalY(-gStepSize);
+	//  //this is not Pitch
+	//	if (key == GLUT_KEY_PAGE_UP)
+	//		cameraFrame.RotateLocalX(gStepSize);
+	//
+	//	if (key == GLUT_KEY_PAGE_DOWN)
+	//		cameraFrame.RotateLocalX(-gStepSize);
 
-	if (key == GLUT_KEY_HOME)
-		cameraFrame.MoveUp(stepSize);
+	if (key == GLUT_KEY_PAGE_UP)
+		cameraFrame.MoveUp(gStepSize);
 
-	if (key == GLUT_KEY_END)
-		cameraFrame.MoveUp(-stepSize);
+	if (key == GLUT_KEY_PAGE_DOWN)
+		cameraFrame.MoveUp(-gStepSize);
 
-	}
+}
+
 
 int main(int argc, char* argv[])
     {
@@ -220,6 +236,7 @@ int main(int argc, char* argv[])
     glutReshapeFunc(ChangeSize);
     glutDisplayFunc(RenderScene);
     glutSpecialFunc(SpecialKeys);
+	glutKeyboardFunc(KeyboardHandler);
     
     GLenum err = glewInit();
     if (GLEW_OK != err) {

@@ -81,4 +81,12 @@
       <Filter>Header Files\Gl</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\shaders\ADGLight.fp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\shaders\ADGLight.vp">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
 </Project>

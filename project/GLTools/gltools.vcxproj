@@ -103,6 +103,10 @@
     <ClInclude Include="..\..\Src\GLTools\include\math3d.h" />
     <ClInclude Include="..\..\Src\GLTools\include\Stopwatch.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\shaders\ADGLight.fp" />
+    <None Include="..\..\shaders\ADGLight.vp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
