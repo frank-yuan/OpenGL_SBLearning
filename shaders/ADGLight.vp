@@ -26,11 +26,11 @@ void main(void){
 	vec3 dir = normalize(vLightPos.xyz - pos);
 
 	// ambient light
-	//vOutColor = vAmbientColor;
+	vOutColor = vAmbientColor;
 
 	// diffuse light
 	float intens = max(0.0, dot(nor, dir));
-	vOutColor.rgb = vDiffuseColor.rgb * intens;
+	vOutColor.rgb += vDiffuseColor.rgb * intens;
 
 	// specular light
 	vec3 reflectDir = reflect(-dir, nor);
