@@ -41,6 +41,13 @@ GLFrame				cameraFrame;
 GLuint				lightShader;
 //################################################################
 
+//################ custom shader defnination #####################
+#define             TEXTURE_COUNT 1
+GLuint				textures[TEXTURE_COUNT];
+const char          *textureFileName[TEXTURE_COUNT] = {"data/texture/brick.tga"};
+//################################################################
+
+
 //////////////////////////////////////////////////////////////////
 // This function does any needed initialization on the rendering
 // context. 
@@ -73,6 +80,21 @@ void SetupRC()
 					GLT_ATTRIBUTE_VERTEX, "vVertex", GLT_ATTRIBUTE_NORMAL, "vNormal");
 	//################################################################
 
+    //################ texture #####################
+        glGenTextures(TEXTURE_COUNT, textures);
+        for (int i = 0; i < TEXTURE_COUNT; ++i)
+        {
+            GLint iWidth, iHeight, iComponents;
+            GLenum eFormat;
+            glBindTexture(GL_TEXTURE_2D, textures[i]);
+            GLbyte* pBytes = gltReadTGABits(textureFileName[i], &iWidth ,&iHeight, &iComponents, &eFormat);
+            if (pBytes)
+            {
+                glTexImage2D(GL_TEXTURE_2D, 0, iComponents, iWidth, iHeight, 0, eFormat, GL_UNSIGNED_BYTE, pBytes);
+                free(pBytes);
+            }
+        }
+    //###############################################
     }
 
 ///////////////////////////////////////////////////

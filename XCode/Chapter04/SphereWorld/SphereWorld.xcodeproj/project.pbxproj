@@ -13,6 +13,7 @@
 		39CD317B112B870000A7A195 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39CD317A112B870000A7A195 /* OpenGL.framework */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		AC0274C2179246F5000A1F7E /* data in Resources */ = {isa = PBXBuildFile; fileRef = AC0274C1179246F5000A1F7E /* data */; };
 		AC95ECF7178FF2410030D747 /* shaders in Resources */ = {isa = PBXBuildFile; fileRef = AC95ECF6178FF2410030D747 /* shaders */; };
 		AC95ED0E17900EFB0030D747 /* libGLTools.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AC95ED0A178FF3500030D747 /* libGLTools.a */; };
 /* End PBXBuildFile section */
@@ -48,6 +49,7 @@
 		39CD3180112B871000A7A195 /* libGLTools.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libGLTools.a; path = ../../GLTools/libGLTools.a; sourceTree = SOURCE_ROOT; };
 		8D1107310486CEB800E47090 /* SphereWorld-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "SphereWorld-Info.plist"; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* SphereWorld.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SphereWorld.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AC0274C1179246F5000A1F7E /* data */ = {isa = PBXFileReference; lastKnownFileType = folder; name = data; path = ../../../data; sourceTree = "<group>"; };
 		AC95ECF6178FF2410030D747 /* shaders */ = {isa = PBXFileReference; lastKnownFileType = folder; name = shaders; path = ../../../shaders; sourceTree = "<group>"; };
 		AC95ED02178FF3500030D747 /* GLTools.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GLTools.xcodeproj; path = ../../GLTools/GLTools/GLTools.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -125,6 +127,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				AC0274C1179246F5000A1F7E /* data */,
 				AC95ECF6178FF2410030D747 /* shaders */,
 				8D1107310486CEB800E47090 /* SphereWorld-Info.plist */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
@@ -220,6 +223,7 @@
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
 				1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */,
 				AC95ECF7178FF2410030D747 /* shaders in Resources */,
+				AC0274C2179246F5000A1F7E /* data in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
