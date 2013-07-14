@@ -2,26 +2,26 @@
 
 attribute vec4 vVertex;
 attribute vec3 vNormal;
-uniform	  vec4 vLightPos; 
 uniform	  mat4 mvpMatrix;
 uniform	  mat4 mvMatrix;
 uniform	  mat3 normalMatrix;
 
 
 varying	  vec3 vOutNormal;
-varying   vec3 vLightDir;
+varying   vec3 vOutPos;
 void main(void){
 
 	vec3 nor = normalize(normalMatrix * vNormal);
 	vec4 posInEyeSpace = mvMatrix * vVertex;
-	vec3 pos = posInEyeSpace.xyz / posInEyeSpace.w;
+	vOutPos = posInEyeSpace.xyz / posInEyeSpace.w;
 	//vec3 dir = normalize(vLightPos - vVertex.xyz);
 	//dir = normalMatrix * dir;
-	vec3 dir = normalize(vLightPos.xyz - pos);
+	//vec3 dir = normalize(vLightPos.xyz - pos);
 
 	// specular light
-	vLightDir = dir;//reflect(-dir, nor);
+	//vLightDir = dir;//reflect(-dir, nor);
     vOutNormal = nor;
+    
 	gl_Position = mvpMatrix * vVertex;
 }
 
