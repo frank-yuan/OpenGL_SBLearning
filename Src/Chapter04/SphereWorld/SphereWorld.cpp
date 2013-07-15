@@ -57,7 +57,7 @@ void SetupRC()
 	shaderManager.InitializeStockShaders();
 	
 	glEnable(GL_DEPTH_TEST);
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	
@@ -65,14 +65,25 @@ void SetupRC()
 	gltMakeTorus(torusBatch, 0.4f, 0.15f, 30, 30);
 	gltMakeSphere(sphereBatch, 0.65f, 26, 13);	
     	
-	floorBatch.Begin(GL_LINES, 324);
-    for(GLfloat x = -20.0; x <= 20.0f; x+= 0.5) {
-        floorBatch.Vertex3f(x, -0.55f, 20.0f);
-        floorBatch.Vertex3f(x, -0.55f, -20.0f);
+	floorBatch.Begin(GL_TRIANGLE_STRIP, 40, 1);
+        float step = 1.0f;
+    for(GLfloat x = -1.0; x < 1.0f; x+= step * 2) {
+        floorBatch.MultiTexCoord2f(0, 0.0f, 0.0f);
+        floorBatch.Color4f(1, 0, 0, 0);
+        floorBatch.Vertex3f(x - step, -0.5f, -step);
         
-        floorBatch.Vertex3f(20.0f, -0.55f, x);
-        floorBatch.Vertex3f(-20.0f, -0.55f, x);
-        }
+        floorBatch.MultiTexCoord2f(0, 0.0f, 1.0f);
+        floorBatch.Color4f(0, 0, 1, 0);
+        floorBatch.Vertex3f(x - step, -0.5f, step);
+        
+        floorBatch.MultiTexCoord2f(0, 1.0f, 0.0f);
+        floorBatch.Color4f(1, 0, 1, 0);
+        floorBatch.Vertex3f(x + step, -0.5f, -step);
+        
+        floorBatch.MultiTexCoord2f(0, 1.0f, 1.0f);
+        floorBatch.Color4f(1, 1, 0, 0);
+        floorBatch.Vertex3f(x + step, -0.5f, step);
+    }
     floorBatch.End();    
 
 	//################ custom shader initialize #####################
@@ -140,7 +151,7 @@ void RenderScene(void)
 	cameraFrame.GetCameraMatrix(cameraMatrix);
 	modelViewMatrix.LoadMatrix(cameraMatrix);
 		// Draw the ground
-		shaderManager.UseStockShader(GLT_SHADER_FLAT,
+		shaderManager.UseStockShader(GLT_SHADER_SHADED,
 									 transformPipeline.GetModelViewProjectionMatrix(),
 									 vFloorColor);	
 		floorBatch.Draw();
