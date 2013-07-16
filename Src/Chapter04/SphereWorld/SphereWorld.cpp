@@ -39,6 +39,7 @@ GLFrame				cameraFrame;
 
 //################ custom shader defnination #####################
 GLuint				lightShader;
+GLuint              textureShader;
 //################################################################
 
 //################ custom shader defnination #####################
@@ -57,7 +58,7 @@ void SetupRC()
 	shaderManager.InitializeStockShaders();
 	
 	glEnable(GL_DEPTH_TEST);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+//	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	
@@ -65,30 +66,33 @@ void SetupRC()
 	gltMakeTorus(torusBatch, 0.4f, 0.15f, 30, 30);
 	gltMakeSphere(sphereBatch, 0.65f, 26, 13);	
     	
-	floorBatch.Begin(GL_TRIANGLE_STRIP, 40, 1);
-        float step = 1.0f;
-    for(GLfloat x = -1.0; x < 1.0f; x+= step * 2) {
+	floorBatch.Begin(GL_TRIANGLE_STRIP, 8, 1);
+        GLfloat step = 1.0f;
+        GLfloat z = -2.0f;
+    for(GLfloat x = -1.0; x < 2.0f; x+= step * 2) {
         floorBatch.MultiTexCoord2f(0, 0.0f, 0.0f);
         floorBatch.Color4f(1, 0, 0, 0);
-        floorBatch.Vertex3f(x - step, -0.5f, -step);
+        floorBatch.Vertex3f(x - step, -0.5f, z -step);
         
         floorBatch.MultiTexCoord2f(0, 0.0f, 1.0f);
         floorBatch.Color4f(0, 0, 1, 0);
-        floorBatch.Vertex3f(x - step, -0.5f, step);
+        floorBatch.Vertex3f(x - step, -0.5f, z + step);
         
         floorBatch.MultiTexCoord2f(0, 1.0f, 0.0f);
         floorBatch.Color4f(1, 0, 1, 0);
-        floorBatch.Vertex3f(x + step, -0.5f, -step);
+        floorBatch.Vertex3f(x + step, -0.5f, z-step);
         
         floorBatch.MultiTexCoord2f(0, 1.0f, 1.0f);
         floorBatch.Color4f(1, 1, 0, 0);
-        floorBatch.Vertex3f(x + step, -0.5f, step);
+        floorBatch.Vertex3f(x + step, -0.5f, z + step);
     }
     floorBatch.End();    
 
 	//################ custom shader initialize #####################
 	lightShader = gltLoadShaderPairWithAttributes("shaders/ADGLight.vp", "shaders/ADGLight.fp", 2, 
 					GLT_ATTRIBUTE_VERTEX, "vVertex", GLT_ATTRIBUTE_NORMAL, "vNormal");
+        textureShader = gltLoadShaderPairWithAttributes("shaders/texture.vp", "shaders/texture.fp", 2,
+                                                        GLT_ATTRIBUTE_VERTEX, "vVertex", GLT_ATTRIBUTE_TEXTURE0, "vTexCoord0");
 	//################################################################
 
     //################ texture #####################
@@ -151,10 +155,20 @@ void RenderScene(void)
 	cameraFrame.GetCameraMatrix(cameraMatrix);
 	modelViewMatrix.LoadMatrix(cameraMatrix);
 		// Draw the ground
-		shaderManager.UseStockShader(GLT_SHADER_SHADED,
+		/*shaderManager.UseStockShader(GLT_SHADER_SHADED,
 									 transformPipeline.GetModelViewProjectionMatrix(),
-									 vFloorColor);	
-		floorBatch.Draw();
+									 vFloorColor);	*/
+        if (textureShader)
+        {
+            shaderManager.UseStockShader(GLT_SHADER_TEXTURE_REPLACE, transformPipeline.GetModelViewProjectionMatrix(), 0);
+            glBindTexture(GL_TEXTURE_2D, textures[0]);
+            /*GLint iMvpMatrix, iTextureUnit0;
+            iMvpMatrix = glGetUniformLocation(textureShader, "mvpMatrix");
+            iTextureUnit0 = glGetUniformLocation(textureShader, "textureUnit0");
+            glUniformMatrix4fv(iMvpMatrix, 1, false, transformPipeline.GetModelViewProjectionMatrix());
+			glUniform1i(iTextureUnit0, textures[0]);*/
+            floorBatch.Draw();
+        }
 
     	// Draw the spinning Torus
     	modelViewMatrix.Translate(0.0f, 0.0f, -2.5f);
