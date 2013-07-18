@@ -102,6 +102,10 @@ void SetupRC()
             GLint iWidth, iHeight, iComponents;
             GLenum eFormat;
             glBindTexture(GL_TEXTURE_2D, textures[i]);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+//            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+//            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
             GLbyte* pBytes = gltReadTGABits(textureFileName[i], &iWidth ,&iHeight, &iComponents, &eFormat);
             if (pBytes)
             {
@@ -147,6 +151,7 @@ void RenderScene(void)
 	
     //vLightPos = modelViewMatrix
     // Save the current modelview matrix (the identity matrix)
+        modelViewMatrix.LoadIdentity();
 	modelViewMatrix.PushMatrix();	
 
 	//cameraFrame.RotateLocalY(yRot / 30.0f);
@@ -160,13 +165,14 @@ void RenderScene(void)
 									 vFloorColor);	*/
         if (textureShader)
         {
-            shaderManager.UseStockShader(GLT_SHADER_TEXTURE_REPLACE, transformPipeline.GetModelViewProjectionMatrix(), 0);
-            glBindTexture(GL_TEXTURE_2D, textures[0]);
-            /*GLint iMvpMatrix, iTextureUnit0;
+//            shaderManager.UseStockShader(GLT_SHADER_TEXTURE_REPLACE, transformPipeline.GetModelViewProjectionMatrix(), 0);
+
+            GLint iMvpMatrix, iTextureUnit0;
             iMvpMatrix = glGetUniformLocation(textureShader, "mvpMatrix");
             iTextureUnit0 = glGetUniformLocation(textureShader, "textureUnit0");
             glUniformMatrix4fv(iMvpMatrix, 1, false, transformPipeline.GetModelViewProjectionMatrix());
-			glUniform1i(iTextureUnit0, textures[0]);*/
+			glUniform1i(iTextureUnit0, 0);
+            glBindTexture(GL_TEXTURE_2D, textures[0]);
             floorBatch.Draw();
         }
 
