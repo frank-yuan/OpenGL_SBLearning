@@ -165,8 +165,7 @@ void RenderScene(void)
 									 vFloorColor);	*/
         if (textureShader)
         {
-//            shaderManager.UseStockShader(GLT_SHADER_TEXTURE_REPLACE, transformPipeline.GetModelViewProjectionMatrix(), 0);
-
+			glUseProgram(textureShader);
             GLint iMvpMatrix, iTextureUnit0;
             iMvpMatrix = glGetUniformLocation(textureShader, "mvpMatrix");
             iTextureUnit0 = glGetUniformLocation(textureShader, "textureUnit0");
