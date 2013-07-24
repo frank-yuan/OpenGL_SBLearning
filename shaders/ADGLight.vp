@@ -2,6 +2,7 @@
 
 attribute vec4 vVertex;
 attribute vec3 vNormal;
+attribute vec2 vTexture;
 uniform	  mat4 mvpMatrix;
 uniform	  mat4 mvMatrix;
 uniform	  mat3 normalMatrix;
@@ -9,6 +10,8 @@ uniform	  mat3 normalMatrix;
 
 varying	  vec3 vOutNormal;
 varying   vec3 vOutPos;
+varying   vec2 vOutTexCoords;
+
 void main(void){
 
 	vec3 nor = normalize(normalMatrix * vNormal);
@@ -21,6 +24,7 @@ void main(void){
 	// specular light
 	//vLightDir = dir;//reflect(-dir, nor);
     vOutNormal = nor;
+	vOutTexCoords = vTexture;
     
 	gl_Position = mvpMatrix * vVertex;
 }

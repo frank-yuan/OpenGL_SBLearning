@@ -3,9 +3,11 @@ uniform   vec4 vDiffuseColor;
 uniform   vec4 vAmbientColor;
 uniform   vec4 vSpecularColor;
 uniform	  float fShiness;
+uniform   sampler2D textureUnit0;
 uniform	  vec4 vLightPos; 
 varying		vec3 vOutNormal;
 varying     vec3 vOutPos;
+varying		vec2 vOutTexCoords;
 
 void main(void) 
 { 
@@ -22,5 +24,8 @@ void main(void)
     intens = max(0.0, dot(normalize(-vOutPos), normalize(reflect(-vLightDir, vOutNormal))));
 	float shine = pow(intens, fShiness);
 	vOutColor.rgb += vSpecularColor.rgb * shine;
-	gl_FragColor = vOutColor;
+	vec2 OutCoords = vOutTexCoords;
+	OutCoords.x = 1 - vOutTexCoords.y ;
+	OutCoords.y = vOutTexCoords.x;
+	gl_FragColor = texture2D(textureUnit0, OutCoords) * 0.5 + 0.5 * vOutColor;
 }
