@@ -24,8 +24,5 @@ void main(void)
     intens = max(0.0, dot(normalize(-vOutPos), normalize(reflect(-vLightDir, vOutNormal))));
 	float shine = pow(intens, fShiness);
 	vOutColor.rgb += vSpecularColor.rgb * shine;
-	vec2 OutCoords = vOutTexCoords;
-	OutCoords.x = 1 - vOutTexCoords.y ;
-	OutCoords.y = vOutTexCoords.x;
-	gl_FragColor = texture2D(textureUnit0, OutCoords) * 0.5 + 0.5 * vOutColor;
+	gl_FragColor = texture2D(textureUnit0, vOutTexCoords) * vOutColor;
 }

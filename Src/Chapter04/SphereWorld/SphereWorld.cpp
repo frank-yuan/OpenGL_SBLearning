@@ -34,6 +34,7 @@ GLGeometryTransform	transformPipeline;		// Geometry Transform Pipeline
 GLTriangleBatch		torusBatch;
 GLBatch				floorBatch;
 GLTriangleBatch		sphereBatch;
+GLTriangleBatch		moonBatch;
 
 GLFrame				cameraFrame;
 
@@ -43,9 +44,12 @@ GLuint              textureShader;
 //################################################################
 
 //################ custom shader defnination #####################
-#define             TEXTURE_COUNT 1
+#define             TEXTURE_COUNT 3
 GLuint				textures[TEXTURE_COUNT];
-const char          *textureFileName[TEXTURE_COUNT] = {"data/texture/brick.tga"};
+const char          *textureFileName[TEXTURE_COUNT] = {	"data/texture/earth_2k.tga", 
+														"data/texture/moon.tga",
+														"data/texture/galaxy_cube.tga"
+														};
 //################################################################
 
 
@@ -65,6 +69,8 @@ void SetupRC()
 	// This makes a torus
 	gltMakeTorus(torusBatch, 0.4f, 0.15f, 30, 30);
 	gltMakeSphere(sphereBatch, 0.65f, 26, 13);	
+	gltMakeSphere(moonBatch, 0.15f, 26, 13);	
+
     	
 	floorBatch.Begin(GL_TRIANGLE_STRIP, 8, 1);
         GLfloat step = 1.0f;
@@ -89,8 +95,8 @@ void SetupRC()
     floorBatch.End();    
 
 	//################ custom shader initialize #####################
-	lightShader = gltLoadShaderPairWithAttributes("shaders/ADGLight.vp", "shaders/ADGLight.fp", 2, 
-					GLT_ATTRIBUTE_VERTEX, "vVertex", GLT_ATTRIBUTE_NORMAL, "vNormal");
+	lightShader = gltLoadShaderPairWithAttributes("shaders/ADGLight.vp", "shaders/ADGLight.fp", 3, 
+					GLT_ATTRIBUTE_VERTEX, "vVertex", GLT_ATTRIBUTE_NORMAL, "vNormal", GLT_ATTRIBUTE_TEXTURE0, "vTexture");
         textureShader = gltLoadShaderPairWithAttributes("shaders/texture.vp", "shaders/texture.fp", 2,
                                                         GLT_ATTRIBUTE_VERTEX, "vVertex", GLT_ATTRIBUTE_TEXTURE0, "vTexCoord0");
 	//################################################################
@@ -102,10 +108,18 @@ void SetupRC()
             GLint iWidth, iHeight, iComponents;
             GLenum eFormat;
             glBindTexture(GL_TEXTURE_2D, textures[i]);
+			// The process of calculating color fragments 
+			// from a stretched or shrunken texture map is
+			// called texture filtering.
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-//            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-//            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+			// If texture coordinates fall outside this 
+			// range, OpenGL handles them according
+			// to the current texture wrapping mode.
+			// GL_REPEAT, GL_CLAMP, GL_CLAMP_TO_EDGE, or GL_CLAMP_TO_BORDER
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
             GLbyte* pBytes = gltReadTGABits(textureFileName[i], &iWidth ,&iHeight, &iComponents, &eFormat);
             if (pBytes)
             {
@@ -137,14 +151,14 @@ void RenderScene(void)
     // Color values
     static GLfloat vFloorColor[] = { 0.0f, 1.0f, 0.0f, 1.0f};
     static GLfloat vTorusColor[] = { 1.0f, 0.0f, 0.0f, 1.0f };
-    static GLfloat vAmbientColor[] = { 0.0f, 0.0f, 0.3f, 1.0f };
-    static GLfloat vSpecularColor[] = { 0.8f, 0.8f, 0.8f, 1.0f };
-    static GLfloat vSphereColor[] = { 0.5f, 0.5f, 0.5f, 1.0f };
-    static GLfloat vLightPos[] = { .0f, 100.0f, 100.0f, 1.0f};
+    static GLfloat vAmbientColor[] = { 0.0f, 0.0f, 0.0f, 0.0f };
+    static GLfloat vSpecularColor[] = { 0.1f, 0.1f, 0.1f, 1.0f };
+    static GLfloat vSphereColor[] = { 0.8f, 0.8f, 0.8f, 1.0f };
+    static GLfloat vLightPos[] = { 10.0f, 00.0f, 10.0f, 1.0f};
 
     // Time Based animation
 	static CStopWatch	rotTimer;
-	float yRot = rotTimer.GetElapsedSeconds() * 60.0f;
+	float yRot = rotTimer.GetElapsedSeconds() * 50.0f;
 	
 	// Clear the color and depth buffers
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -163,44 +177,43 @@ void RenderScene(void)
 		/*shaderManager.UseStockShader(GLT_SHADER_SHADED,
 									 transformPipeline.GetModelViewProjectionMatrix(),
 									 vFloorColor);	*/
-        if (textureShader)
-        {
-			glUseProgram(textureShader);
-            GLint iMvpMatrix, iTextureUnit0;
-            iMvpMatrix = glGetUniformLocation(textureShader, "mvpMatrix");
-            iTextureUnit0 = glGetUniformLocation(textureShader, "textureUnit0");
-            glUniformMatrix4fv(iMvpMatrix, 1, false, transformPipeline.GetModelViewProjectionMatrix());
-			glUniform1i(iTextureUnit0, 0);
-            glBindTexture(GL_TEXTURE_2D, textures[0]);
-            floorBatch.Draw();
-        }
+        //if (textureShader)
+        //{
+		//	glUseProgram(textureShader);
+        //    GLint iMvpMatrix, iTextureUnit0;
+        //    iMvpMatrix = glGetUniformLocation(textureShader, "mvpMatrix");
+        //    iTextureUnit0 = glGetUniformLocation(textureShader, "textureUnit0");
+        //    glUniformMatrix4fv(iMvpMatrix, 1, false, transformPipeline.GetModelViewProjectionMatrix());
+		//	glUniform1i(iTextureUnit0, 0);
+        //    glBindTexture(GL_TEXTURE_2D, textures[1]);
+        //    floorBatch.Draw();
+        //}
 
     	// Draw the spinning Torus
     	modelViewMatrix.Translate(0.0f, 0.0f, -2.5f);
-    	modelViewMatrix.Rotate(yRot, 0.0f, 1.0f, 0.0f);
-    	//shaderManager.UseStockShader(GLT_SHADER_FLAT, transformPipeline.GetModelViewProjectionMatrix(),
-    	//                            vTorusColor);
-    	//torusBatch.Draw();
+    	modelViewMatrix.Rotate(-90, 1.0f, 0.0f, 0.0f);
+    	modelViewMatrix.Rotate(yRot, 0.0f, 0.0f, 1.0f);
 
 		//################ custom shader rendering #####################
 		if (lightShader)
 		{
 			modelViewMatrix.PushMatrix();
 			{
+				//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 				//modelViewMatrix.Translate(0.4f, 0, 0);
 				//modelViewMatrix.Rotate(yRot / 2, 0.0f, 1.0f, 0.0f);
 				//modelViewMatrix.Translate(0.3f, 0, 0);
 				glUseProgram(lightShader);
 
-				GLint iDiffuseColor, iAmbientColor, iMvpMatrix, iMvMatrix, iNormalMatrix, iLightPos, iSpecularColor, iShiness;
-				iDiffuseColor = glGetUniformLocation(lightShader, "vDiffuseColor");
-				iAmbientColor = glGetUniformLocation(lightShader, "vAmbientColor");
-				iMvpMatrix = glGetUniformLocation(lightShader, "mvpMatrix");
-				iMvMatrix = glGetUniformLocation(lightShader, "mvMatrix");
-				iNormalMatrix = glGetUniformLocation(lightShader, "normalMatrix");
-				iLightPos = glGetUniformLocation(lightShader, "vLightPos");
-				iSpecularColor = glGetUniformLocation(lightShader, "vSpecularColor");
-				iShiness = glGetUniformLocation(lightShader, "fShiness");
+				GLint iDiffuseColor = glGetUniformLocation(lightShader, "vDiffuseColor");
+				GLint iAmbientColor = glGetUniformLocation(lightShader, "vAmbientColor");
+				GLint iMvpMatrix = glGetUniformLocation(lightShader, "mvpMatrix");
+				GLint iMvMatrix = glGetUniformLocation(lightShader, "mvMatrix");
+				GLint iNormalMatrix = glGetUniformLocation(lightShader, "normalMatrix");
+				GLint iLightPos = glGetUniformLocation(lightShader, "vLightPos");
+				GLint iSpecularColor = glGetUniformLocation(lightShader, "vSpecularColor");
+				GLint iShiness = glGetUniformLocation(lightShader, "fShiness");
+				GLint iTextureUnit0 = glGetUniformLocation(textureShader, "textureUnit0");
 				M3DVector4f lightPos;
 				m3dTransformVector4(lightPos, vLightPos, cameraMatrix);
 				glUniform4fv(iLightPos, 1, lightPos);
@@ -211,7 +224,22 @@ void RenderScene(void)
 				glUniformMatrix4fv(iMvMatrix, 1, false, transformPipeline.GetModelViewMatrix());
 				glUniformMatrix3fv(iNormalMatrix, 1, false, transformPipeline.GetNormalMatrix());
 				glUniform1f(iShiness, 8.0f);
+				glUniform1i(iTextureUnit0, 0);
+				glBindTexture(GL_TEXTURE_2D, textures[0]);
 				sphereBatch.Draw();
+
+
+				// Draw Moon
+				modelViewMatrix.PushMatrix();
+				{
+					modelViewMatrix.Translate(1.0f, 0, 0);
+					modelViewMatrix.Rotate(yRot,0, 0, 1);
+					glUniformMatrix4fv(iMvpMatrix, 1, false, transformPipeline.GetModelViewProjectionMatrix());
+					glUniformMatrix4fv(iMvMatrix, 1, false, transformPipeline.GetModelViewMatrix());
+					glUniformMatrix3fv(iNormalMatrix, 1, false, transformPipeline.GetNormalMatrix());
+					glBindTexture(GL_TEXTURE_2D, textures[1]);
+					moonBatch.Draw();
+				}
 			}
 			modelViewMatrix.PopMatrix();
 		}
