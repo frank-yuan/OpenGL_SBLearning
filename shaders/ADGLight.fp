@@ -19,10 +19,11 @@ void main(void)
 	// diffuse light
 	float intens = max(0.0, dot(vOutNormal, vLightDir));
 	vOutColor.rgb += vDiffuseColor.rgb * intens;
+	vOutColor *= texture2D(textureUnit0, vOutTexCoords);
 
     // TODO: why use -vOutPos??????
     intens = max(0.0, dot(normalize(-vOutPos), normalize(reflect(-vLightDir, vOutNormal))));
 	float shine = pow(intens, fShiness);
 	vOutColor.rgb += vSpecularColor.rgb * shine;
-	gl_FragColor = texture2D(textureUnit0, vOutTexCoords) * vOutColor;
+	gl_FragColor = vOutColor;
 }

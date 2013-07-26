@@ -2,7 +2,7 @@
 // OpenGL SuperBible
 // New and improved (performance) sphere world
 // Program by Richard S. Wright Jr.
-
+#include <assert.h>
 #include <GLTools.h>
 #include <GLShaderManager.h>
 #include <GLFrustum.h>
@@ -44,91 +44,151 @@ GLuint              textureShader;
 //################################################################
 
 //################ custom shader defnination #####################
-#define             TEXTURE_COUNT 3
-GLuint				textures[TEXTURE_COUNT];
-const char          *textureFileName[TEXTURE_COUNT] = {	"data/texture/earth_2k.tga", 
+#define             TEXTURE2D_COUNT 2
+GLuint				textures2D[TEXTURE2D_COUNT];
+const char          *texture2DFileName[TEXTURE2D_COUNT] = {	"data/texture/earth_2k.tga", 
 														"data/texture/moon.tga",
+														};
+#define             TEXTURECUBE_COUNT 1
+GLuint				texturesCube[TEXTURECUBE_COUNT];
+const char          *textureCubeFileName[TEXTURE2D_COUNT] = {	
 														"data/texture/galaxy_cube.tga"
 														};
 //################################################################
 
+const GLuint CUBE_COLUMN = 4;
+const GLuint CUBE_ROW = 3;
+GLenum cube[CUBE_ROW][CUBE_COLUMN] = { 
+	{0, GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, 0}, 
+	{GL_TEXTURE_CUBE_MAP_NEGATIVE_X, GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, GL_TEXTURE_CUBE_MAP_POSITIVE_X, GL_TEXTURE_CUBE_MAP_POSITIVE_Z}, 
+	{GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, 0, 0}
+};
+GLuint TileSize = 256;
+void LoadCubeMap()
+{
+	glGenTextures(TEXTURECUBE_COUNT, texturesCube);
+	for (int i = 0; i < TEXTURECUBE_COUNT; ++i)
+	{
+		GLint iWidth, iHeight, iComponents;
+		GLenum eFormat;
+		glBindTexture(GL_TEXTURE_CUBE_MAP, texturesCube[i]);
+
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+		GLbyte* pBytes = gltReadTGABits(textureCubeFileName[i], &iWidth ,&iHeight, &iComponents, &eFormat);
+		if (pBytes)
+		{
+			assert(iWidth / TileSize == CUBE_COLUMN);
+			assert(iHeight / TileSize == CUBE_ROW);
+
+			GLuint pixelBytes = 3;
+
+			GLbyte* pSliced = new GLbyte[TileSize * TileSize * pixelBytes];
+			for (int row = 0; row < CUBE_ROW; ++row)
+			{
+				for (int col = 0; col < CUBE_COLUMN; ++col)
+				{
+					GLuint target = cube[row][col];
+					if (target != 0)
+					{
+						GLuint StartX = col * TileSize;
+						GLuint StartY = row * TileSize;
+						// copy data by rows
+						for (int j = 0; j < TileSize; ++j)
+						{
+							memcpy(pSliced + j * TileSize * pixelBytes, pBytes + ((StartY + j) * iWidth + StartX) * pixelBytes , TileSize * pixelBytes);
+						}
+						glTexImage2D(target, 0, iComponents, TileSize, TileSize, 0, eFormat, GL_UNSIGNED_BYTE, pSliced);
+					}
+				}
+			}
+			free(pSliced);
+			free(pBytes);
+		}
+	}
+}
 
 //////////////////////////////////////////////////////////////////
 // This function does any needed initialization on the rendering
 // context. 
 void SetupRC()
-    {
+{
 	// Initialze Shader Manager
 	shaderManager.InitializeStockShaders();
-	
+
 	glEnable(GL_DEPTH_TEST);
-//	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    
+	//	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	
+
 	// This makes a torus
 	gltMakeTorus(torusBatch, 0.4f, 0.15f, 30, 30);
 	gltMakeSphere(sphereBatch, 0.65f, 26, 13);	
 	gltMakeSphere(moonBatch, 0.15f, 26, 13);	
 
-    	
+
 	floorBatch.Begin(GL_TRIANGLE_STRIP, 8, 1);
-        GLfloat step = 1.0f;
-        GLfloat z = -2.0f;
-    for(GLfloat x = -1.0; x < 2.0f; x+= step * 2) {
-        floorBatch.MultiTexCoord2f(0, 0.0f, 0.0f);
-        floorBatch.Color4f(1, 0, 0, 0);
-        floorBatch.Vertex3f(x - step, -0.5f, z -step);
-        
-        floorBatch.MultiTexCoord2f(0, 0.0f, 1.0f);
-        floorBatch.Color4f(0, 0, 1, 0);
-        floorBatch.Vertex3f(x - step, -0.5f, z + step);
-        
-        floorBatch.MultiTexCoord2f(0, 1.0f, 0.0f);
-        floorBatch.Color4f(1, 0, 1, 0);
-        floorBatch.Vertex3f(x + step, -0.5f, z-step);
-        
-        floorBatch.MultiTexCoord2f(0, 1.0f, 1.0f);
-        floorBatch.Color4f(1, 1, 0, 0);
-        floorBatch.Vertex3f(x + step, -0.5f, z + step);
-    }
-    floorBatch.End();    
+	GLfloat step = 1.0f;
+	GLfloat z = -2.0f;
+	for(GLfloat x = -1.0; x < 2.0f; x+= step * 2) {
+		floorBatch.MultiTexCoord2f(0, 0.0f, 0.0f);
+		floorBatch.Color4f(1, 0, 0, 0);
+		floorBatch.Vertex3f(x - step, -0.5f, z -step);
+
+		floorBatch.MultiTexCoord2f(0, 0.0f, 1.0f);
+		floorBatch.Color4f(0, 0, 1, 0);
+		floorBatch.Vertex3f(x - step, -0.5f, z + step);
+
+		floorBatch.MultiTexCoord2f(0, 1.0f, 0.0f);
+		floorBatch.Color4f(1, 0, 1, 0);
+		floorBatch.Vertex3f(x + step, -0.5f, z-step);
+
+		floorBatch.MultiTexCoord2f(0, 1.0f, 1.0f);
+		floorBatch.Color4f(1, 1, 0, 0);
+		floorBatch.Vertex3f(x + step, -0.5f, z + step);
+	}
+	floorBatch.End();    
 
 	//################ custom shader initialize #####################
 	lightShader = gltLoadShaderPairWithAttributes("shaders/ADGLight.vp", "shaders/ADGLight.fp", 3, 
-					GLT_ATTRIBUTE_VERTEX, "vVertex", GLT_ATTRIBUTE_NORMAL, "vNormal", GLT_ATTRIBUTE_TEXTURE0, "vTexture");
-        textureShader = gltLoadShaderPairWithAttributes("shaders/texture.vp", "shaders/texture.fp", 2,
-                                                        GLT_ATTRIBUTE_VERTEX, "vVertex", GLT_ATTRIBUTE_TEXTURE0, "vTexCoord0");
+		GLT_ATTRIBUTE_VERTEX, "vVertex", GLT_ATTRIBUTE_NORMAL, "vNormal", GLT_ATTRIBUTE_TEXTURE0, "vTexture");
+	textureShader = gltLoadShaderPairWithAttributes("shaders/texture.vp", "shaders/texture.fp", 2,
+		GLT_ATTRIBUTE_VERTEX, "vVertex", GLT_ATTRIBUTE_TEXTURE0, "vTexCoord0");
 	//################################################################
 
-    //################ texture #####################
-        glGenTextures(TEXTURE_COUNT, textures);
-        for (int i = 0; i < TEXTURE_COUNT; ++i)
-        {
-            GLint iWidth, iHeight, iComponents;
-            GLenum eFormat;
-            glBindTexture(GL_TEXTURE_2D, textures[i]);
-			// The process of calculating color fragments 
-			// from a stretched or shrunken texture map is
-			// called texture filtering.
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	//################ texture #####################
+	glGenTextures(TEXTURE2D_COUNT, textures2D);
+	for (int i = 0; i < TEXTURE2D_COUNT; ++i)
+	{
+		GLint iWidth, iHeight, iComponents;
+		GLenum eFormat;
+		glBindTexture(GL_TEXTURE_2D, textures2D[i]);
+		// The process of calculating color fragments 
+		// from a stretched or shrunken texture map is
+		// called texture filtering.
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
-			// If texture coordinates fall outside this 
-			// range, OpenGL handles them according
-			// to the current texture wrapping mode.
-			// GL_REPEAT, GL_CLAMP, GL_CLAMP_TO_EDGE, or GL_CLAMP_TO_BORDER
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-            GLbyte* pBytes = gltReadTGABits(textureFileName[i], &iWidth ,&iHeight, &iComponents, &eFormat);
-            if (pBytes)
-            {
-                glTexImage2D(GL_TEXTURE_2D, 0, iComponents, iWidth, iHeight, 0, eFormat, GL_UNSIGNED_BYTE, pBytes);
-                free(pBytes);
-            }
-        }
-    //###############################################
-    }
+		// If texture coordinates fall outside this 
+		// range, OpenGL handles them according
+		// to the current texture wrapping mode.
+		// GL_REPEAT, GL_CLAMP, GL_CLAMP_TO_EDGE, or GL_CLAMP_TO_BORDER
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		GLbyte* pBytes = gltReadTGABits(texture2DFileName[i], &iWidth ,&iHeight, &iComponents, &eFormat);
+		if (pBytes)
+		{
+			glTexImage2D(GL_TEXTURE_2D, 0, iComponents, iWidth, iHeight, 0, eFormat, GL_UNSIGNED_BYTE, pBytes);
+			free(pBytes);
+		}
+	}
+	//###############################################
+	LoadCubeMap();
+}
+
 
 ///////////////////////////////////////////////////
 // Screen changes size or is initialized
@@ -185,7 +245,7 @@ void RenderScene(void)
         //    iTextureUnit0 = glGetUniformLocation(textureShader, "textureUnit0");
         //    glUniformMatrix4fv(iMvpMatrix, 1, false, transformPipeline.GetModelViewProjectionMatrix());
 		//	glUniform1i(iTextureUnit0, 0);
-        //    glBindTexture(GL_TEXTURE_2D, textures[1]);
+        //    glBindTexture(GL_TEXTURE_2D, textures2D[1]);
         //    floorBatch.Draw();
         //}
 
@@ -225,7 +285,7 @@ void RenderScene(void)
 				glUniformMatrix3fv(iNormalMatrix, 1, false, transformPipeline.GetNormalMatrix());
 				glUniform1f(iShiness, 8.0f);
 				glUniform1i(iTextureUnit0, 0);
-				glBindTexture(GL_TEXTURE_2D, textures[0]);
+				glBindTexture(GL_TEXTURE_2D, textures2D[0]);
 				sphereBatch.Draw();
 
 
@@ -237,7 +297,7 @@ void RenderScene(void)
 					glUniformMatrix4fv(iMvpMatrix, 1, false, transformPipeline.GetModelViewProjectionMatrix());
 					glUniformMatrix4fv(iMvMatrix, 1, false, transformPipeline.GetModelViewMatrix());
 					glUniformMatrix3fv(iNormalMatrix, 1, false, transformPipeline.GetNormalMatrix());
-					glBindTexture(GL_TEXTURE_2D, textures[1]);
+					glBindTexture(GL_TEXTURE_2D, textures2D[1]);
 					moonBatch.Draw();
 				}
 			}
