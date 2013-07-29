@@ -35,12 +35,14 @@ GLTriangleBatch		torusBatch;
 GLBatch				floorBatch;
 GLTriangleBatch		sphereBatch;
 GLTriangleBatch		moonBatch;
+GLBatch				skyBatch;
 
 GLFrame				cameraFrame;
 
 //################ custom shader defnination #####################
 GLuint				lightShader;
 GLuint              textureShader;
+GLuint              cubeMapShader;
 //################################################################
 
 //################ custom shader defnination #####################
@@ -60,8 +62,9 @@ const GLuint CUBE_COLUMN = 4;
 const GLuint CUBE_ROW = 3;
 GLenum cube[CUBE_ROW][CUBE_COLUMN] = { 
 	{0, GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, 0}, 
-	{GL_TEXTURE_CUBE_MAP_NEGATIVE_X, GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, GL_TEXTURE_CUBE_MAP_POSITIVE_X, GL_TEXTURE_CUBE_MAP_POSITIVE_Z}, 
-	{GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, 0, 0}
+	// why this is right hand axis?
+	{GL_TEXTURE_CUBE_MAP_NEGATIVE_X, GL_TEXTURE_CUBE_MAP_POSITIVE_Z, GL_TEXTURE_CUBE_MAP_POSITIVE_X, GL_TEXTURE_CUBE_MAP_NEGATIVE_Z}, 
+	{0, GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, 0}
 };
 GLuint TileSize = 256;
 void LoadCubeMap()
@@ -77,6 +80,7 @@ void LoadCubeMap()
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
 		GLbyte* pBytes = gltReadTGABits(textureCubeFileName[i], &iWidth ,&iHeight, &iComponents, &eFormat);
 		if (pBytes)
@@ -128,6 +132,7 @@ void SetupRC()
 	gltMakeTorus(torusBatch, 0.4f, 0.15f, 30, 30);
 	gltMakeSphere(sphereBatch, 0.65f, 26, 13);	
 	gltMakeSphere(moonBatch, 0.15f, 26, 13);	
+	gltMakeCube(skyBatch, 40.0f);
 
 
 	floorBatch.Begin(GL_TRIANGLE_STRIP, 8, 1);
@@ -157,6 +162,8 @@ void SetupRC()
 		GLT_ATTRIBUTE_VERTEX, "vVertex", GLT_ATTRIBUTE_NORMAL, "vNormal", GLT_ATTRIBUTE_TEXTURE0, "vTexture");
 	textureShader = gltLoadShaderPairWithAttributes("shaders/texture.vp", "shaders/texture.fp", 2,
 		GLT_ATTRIBUTE_VERTEX, "vVertex", GLT_ATTRIBUTE_TEXTURE0, "vTexCoord0");
+	cubeMapShader = gltLoadShaderPairWithAttributes("shaders/CubeMap.vp", "shaders/CubeMap.fp", 1,
+		GLT_ATTRIBUTE_VERTEX, "vVertex");
 	//################################################################
 
 	//################ texture #####################
@@ -249,12 +256,23 @@ void RenderScene(void)
         //    floorBatch.Draw();
         //}
 
+		if (cubeMapShader)
+		{
+			glUseProgram(cubeMapShader);
+			GLint iMvpMatrix = glGetUniformLocation(cubeMapShader, "mvpMatrix");
+			GLint iTextureUnit = glGetUniformLocation(cubeMapShader, "textureUnit0");
+			glUniformMatrix4fv(iMvpMatrix, 1, false, transformPipeline.GetModelViewProjectionMatrix());
+			glUniform1i(iTextureUnit, 0);
+			glBindTexture(GL_TEXTURE_CUBE_MAP, texturesCube[0]);
+			skyBatch.Draw();
+		}
     	// Draw the spinning Torus
     	modelViewMatrix.Translate(0.0f, 0.0f, -2.5f);
     	modelViewMatrix.Rotate(-90, 1.0f, 0.0f, 0.0f);
     	modelViewMatrix.Rotate(yRot, 0.0f, 0.0f, 1.0f);
 
 		//################ custom shader rendering #####################
+
 		if (lightShader)
 		{
 			modelViewMatrix.PushMatrix();
