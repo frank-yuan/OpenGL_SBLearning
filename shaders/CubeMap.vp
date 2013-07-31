@@ -1,4 +1,4 @@
-#version 130
+#version 120
 
 attribute vec4 vVertex;
 uniform	  mat4 mvpMatrix;

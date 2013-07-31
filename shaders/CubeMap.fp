@@ -1,8 +1,8 @@
-#version 130
+#version 120
 uniform     samplerCube textureUnit0;
 varying     vec3        vOutTexCoords;
 
 void main(void) 
 { 	
-	gl_FragColor = texture(textureUnit0, vOutTexCoords);
+	gl_FragColor = textureCube(textureUnit0, vOutTexCoords);
 }
