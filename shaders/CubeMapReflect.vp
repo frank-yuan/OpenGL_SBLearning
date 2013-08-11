@@ -1,0 +1,11 @@
+#version 120
+
+attribute vec4 vVertex;
+uniform	  mat4 mvpMatrix;
+
+varying   vec3 vOutTexCoords;
+void main(void){
+    vOutTexCoords = normalize(vVertex.xyz);    
+	gl_Position = mvpMatrix * vVertex;
+}
+
